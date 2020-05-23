@@ -4,17 +4,21 @@ import Avatar from './Avatar';
 
 const { width, height } = Dimensions.get('window');
 
+const user_info_area = 2/5;
+
 const UserInfo = () => {
 
     const avatarOpacity = React.useRef(new Animated.Value(0)).current;
     const nameOpacity = React.useRef(new Animated.Value(0)).current;
     const cartOpacity = React.useRef(new Animated.Value(0)).current;
 
-    const avatarY = React.useRef(new Animated.Value(75)).current;
-    const nameY = React.useRef(new Animated.Value(75)).current;
-    const cartY = React.useRef(new Animated.Value(75)).current;
+    const avatarY = React.useRef(new Animated.Value(120)).current;
+    const nameY = React.useRef(new Animated.Value(120)).current;
+    const cartY = React.useRef(new Animated.Value(120)).current;
 
-    const avatarOffset = -35;
+    const avatarOffset = 30;
+
+    console.log('Avatar area: ', user_info_area * height);
 
     const show = () => {
 
@@ -86,7 +90,9 @@ const UserInfo = () => {
             </Animated.View>
 
             <Animated.View style={{display:'flex', alignSelf: 'center', marginVertical:5, opacity: cartOpacity, transform: [{translateY: cartY}]}}>
-              <Text style={styles.cart}>You have 3 products</Text>
+                <View style={styles.cart}>
+                    <Text style={{color:'black', fontSize:13}}>You have 3 products</Text>
+                </View>
             </Animated.View>
 
         </View>
@@ -99,14 +105,12 @@ const styles = StyleSheet.create({
       position: 'absolute',
       top: 0,
       zIndex: 2,
-      height: 2/5 * height,
+      height: user_info_area * height,
       width: width,
-      justifyContent:'center',
+      justifyContent:'flex-start',
       alignSelf: 'center'
     },
     cart:{
-      color:'black', 
-      fontSize:13,
       backgroundColor: 'white',
       paddingHorizontal: 18,
       paddingVertical: 8,
