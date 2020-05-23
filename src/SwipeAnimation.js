@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Image, StyleSheet, Dimensions, Animated, Easing } from 'react-native';
 import Svg, { Polygon } from 'react-native-svg';
+import UserInfo from './UserInfo';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -35,7 +37,7 @@ const SwipeAnimation = () => {
     const bgY = React.useRef(new Animated.Value(0)).current;
     const bgX = React.useRef(new Animated.Value(0)).current;
 
-    const fadeIn = () => {
+    const show = () => {
       
       Animated.parallel(
         [
@@ -56,9 +58,10 @@ const SwipeAnimation = () => {
           Animated.timing(growAnim, {
             toValue: cover_area*height,
             easing: Easing.inOut(Easing.exp),
-            duration: 1000,
-            delay: 1000
-          })
+            duration: 900,
+            delay: 1100
+          }),
+          
         ]
       ).start();
 
@@ -67,7 +70,7 @@ const SwipeAnimation = () => {
 
     React.useEffect( () => {
 
-      fadeIn();
+      show();
 
     } , []);
 
@@ -80,6 +83,9 @@ const SwipeAnimation = () => {
             justifyContent: 'flex-end',
           }}
         >
+
+          <UserInfo />
+
           <Animated.View style={{ ...StyleSheet.absoluteFill, flex: 1, marginLeft: bgX, marginTop: bgY }}> 
             
               <Image
@@ -91,6 +97,7 @@ const SwipeAnimation = () => {
             
           </Animated.View>      
 
+          
           <Animated.View style={{ position:'absolute', bottom:0, left:0, height:growAnim}}>
             <Svg width={width} height={cover_area * height} >
               <Polygon
@@ -106,20 +113,3 @@ const SwipeAnimation = () => {
 }
 
 export default SwipeAnimation;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  button: {
-    backgroundColor: 'white',
-    height: 70,
-    marginHorizontal: 20,
-    borderRadius: 35,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 5
-  },
-});
