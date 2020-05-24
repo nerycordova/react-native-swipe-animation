@@ -15,7 +15,7 @@ const card_width_area = 3/5;
 /**
  * Carrousel's area
  */
-const carrousel_area = 1/2;
+const carrousel_area = 2/3;
 
 /** 
 *  Card's width 
@@ -36,6 +36,11 @@ const initial_position = -(width/2 + card_width/2);
  * Vertical gap between center card and siblings
  */
 const vertical_gap = 20;
+
+/**
+ * Carrousel's bottom area
+ */
+const bottom_area = 1/18;
 
 const Carrousel = (props) => {
 
@@ -128,13 +133,14 @@ const Carrousel = (props) => {
         const animations =  data.map ( (item, i) => Animated.timing(scrollX[i], {
                                         toValue: initial_position - (card_width + card_space)*index,
                                         easing: Easing.inOut(Easing.exp),
-                                        // Makes it look like the other cards are following the leader
+                                        // This dealy is to make it look like the rest of the cards are pulled by the card leading the animation
                                         delay : (i >= index && direction === 1 ? 100 : 0) || (i <= index && direction === -1 ? 100 : 0 ),
                                         duration: 1000,
                                     }) );
 
-        //Push down the 'exiting' card
         let priorIndex = index - direction;
+
+        //Animation to push down the 'exiting' card
         animations.push(
             Animated.timing(positionY[priorIndex], {
                 toValue: vertical_gap,
@@ -143,7 +149,7 @@ const Carrousel = (props) => {
             })
         )
 
-        //Push up the 'entering' card
+        //Animation to push up the 'entering' card
         animations.push(
             Animated.timing(positionY[index], {
                 toValue: 0,
@@ -167,12 +173,13 @@ const Carrousel = (props) => {
                                 {
                                     height:'90%', 
                                     left: width + (card_width + card_space ) * i , // carrousel starts positioned all the way to the right
+                                    bottom: 0,
                                     position:'absolute',
                                     transform: [{translateX: scrollX[i]}, {translateY: positionY[i]}]
                                 }} 
                                 key={item.id}
                             >
-                                <Card data={item}/>
+                                <Card data={item} showContent={i===index} />
                             </Animated.View>
                         )
                     })
@@ -187,16 +194,13 @@ const Carrousel = (props) => {
 const styles = StyleSheet.create({
     carrousel:{
         position: 'absolute',
-        bottom: 100,
+        bottom: bottom_area * height ,
         zIndex: 2,
         height: carrousel_area * height,
         width: width,
         justifyContent:'flex-start',
         alignSelf: 'center',
         overflow: 'hidden'
-        // borderWidth: 1,
-        // borderColor: 'blue',
-        // borderStyle: 'solid'
     }
 });
 

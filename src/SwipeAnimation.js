@@ -4,6 +4,8 @@ import Svg, { Polygon } from 'react-native-svg';
 import UserInfo from './UserInfo';
 import Carrousel from './Carrousel';
 
+const moonstone = require('../assets/moonstone.png');
+const shapphire = require('../assets/sapphire.png');
 
 const { width, height } = Dimensions.get('window');
 
@@ -39,17 +41,23 @@ const data = [
   {
     id: 1,
     title: 'Moonstone Keychain',
-    text: 'Choosing the Best Gemstone for Your Necklace and Jewelry'
+    type: 'product',
+    img : moonstone,
+    description: 'Choosing the Best Gemstone for Your Necklace and Jewelry'
   },
   {
     id: 2,
+    type: 'product',
     title: 'Sapphire Keychain',
-    text: 'Choosing the Best Gemstone for Your Necklace and Jewelry'
+    img : shapphire,
+    description: 'Choosing the Best Gemstone for Your Necklace and Jewelry'
   },
   {
     id: 3,
+    type: 'action',
+    img : moonstone,
     title: 'Add a Wearable',
-    text: 'Don’t See One You Like? Choosing the Best Gemstone for Your Necklace and Jewelry'
+    description: 'Don’t See One You Like? Choosing the Best Gemstone for Your Necklace and Jewelry'
   }
 ]
 
