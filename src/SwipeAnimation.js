@@ -2,17 +2,18 @@ import React from 'react';
 import { View, Image, StyleSheet, Dimensions, Animated, Easing } from 'react-native';
 import Svg, { Polygon } from 'react-native-svg';
 import UserInfo from './UserInfo';
+import Carrousel from './Carrousel';
 
 
 const { width, height } = Dimensions.get('window');
 
 /**
- * Angle (in radians) of the triangle clip
+ * Angle (in radians) of the overlay's triangle clip
  */
 const angle =  0.3;
 
 /**
- * Calculate opposite side of the triangle clip
+ * Calculate height of the triangle clip
  */
 const elevation = Math.tan(angle) * width;
 
@@ -30,6 +31,27 @@ const bgYTarget = -150;
  * Background X translation
  */
 const bgXTarget = -50;
+
+/**
+ * Carrousel data
+ */
+const data = [
+  {
+    id: 1,
+    title: 'Moonstone Keychain',
+    text: 'Choosing the Best Gemstone for Your Necklace and Jewelry'
+  },
+  {
+    id: 2,
+    title: 'Sapphire Keychain',
+    text: 'Choosing the Best Gemstone for Your Necklace and Jewelry'
+  },
+  {
+    id: 3,
+    title: 'Add a Wearable',
+    text: 'Don’t See One You Like? Choosing the Best Gemstone for Your Necklace and Jewelry'
+  }
+]
 
 const SwipeAnimation = () => {
 
@@ -108,6 +130,7 @@ const SwipeAnimation = () => {
             </Svg>
           </Animated.View>
           
+          <Carrousel data={data}/>
 
         </View>
       );

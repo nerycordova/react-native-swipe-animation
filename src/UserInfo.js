@@ -121,6 +121,6 @@ const styles = StyleSheet.create({
       paddingVertical: 8,
       borderRadius: 50
     }
-  });
+});
 
 export default UserInfo;
