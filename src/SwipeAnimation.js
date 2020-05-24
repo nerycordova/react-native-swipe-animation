@@ -3,6 +3,7 @@ import { View, Image, StyleSheet, Dimensions, Animated, Easing } from 'react-nat
 import Svg, { Polygon } from 'react-native-svg';
 import UserInfo from './UserInfo';
 import Carrousel from './Carrousel';
+import TabbedMenu from './TabbedMenu';
 
 const moonstone = require('../assets/moonstone.png');
 const shapphire = require('../assets/sapphire.png');
@@ -139,6 +140,9 @@ const SwipeAnimation = () => {
           </Animated.View>
           
           <Carrousel data={data}/>
+
+          {/* Tabbed Menu */}
+          <TabbedMenu visible={true}/>
 
         </View>
       );

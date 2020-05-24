@@ -91,12 +91,12 @@ const UserInfo = () => {
             </Animated.View>
 
             <Animated.View style={{display:'flex', alignSelf: 'center', marginVertical:5, opacity: nameOpacity, transform: [{translateY: nameY}]}}>
-              <Text style={{fontWeight:'bold', color:'white', fontSize:15}}>Lottie Curtis</Text>
+              <Text selectable={false} style={{fontWeight:'bold', color:'white', fontSize:15}}>Lottie Curtis</Text>
             </Animated.View>
 
             <Animated.View style={{display:'flex', alignSelf: 'center', marginVertical:5, opacity: cartOpacity, transform: [{translateY: cartY}]}}>
                 <View style={styles.cart}>
-                    <Text style={{color:'black', fontSize:13}}>You have 3 products</Text>
+                    <Text selectable={false} style={{color:'black', fontSize:13}}>You have 3 products</Text>
                 </View>
             </Animated.View>
 

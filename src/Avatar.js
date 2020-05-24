@@ -1,11 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet } from 'react-native';
 
-const Avatar = (props) => {
-
-    return <Image source={props.source} style={styles.image}/>
-
-}
+const Avatar = (props) =>  <Image source={props.source} style={styles.image}/>
 
 const styles = StyleSheet.create({
     image: {

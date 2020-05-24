@@ -46,7 +46,7 @@ const Carrousel = (props) => {
 
     const config = {
         velocityThreshold: 0.1,
-        directionalOffsetThreshold: 80
+        directionalOffsetThreshold: 500,
     };
 
     const { data } = props;
@@ -128,7 +128,6 @@ const Carrousel = (props) => {
 
 
     useDidMountEffect(() => {
-        console.log('Index now: ',index);
 
         const animations =  data.map ( (item, i) => Animated.timing(scrollX[i], {
                                         toValue: initial_position - (card_width + card_space)*index,
@@ -165,7 +164,21 @@ const Carrousel = (props) => {
     return (
         
             <View style={ styles.carrousel }>
-                <GestureRecognizer onSwipeLeft = { () => swipe(1) } onSwipeRight = { () => swipe(-1) } config={config} style={{height:'100%'}}>
+                <GestureRecognizer onSwipe={ (direction, state) => {
+
+                    //Sometimes the gesture handler does not seem to pickup certain events. The below
+                    //is an attempt to correct that.
+                    const {dx} = state;
+                    if (direction === null){
+                        if (dx > 0) {
+                            swipe(-1) //swipe right
+                        }
+                        else if (dx < 0) {
+                            swipe(1) //swipe left
+                        }
+                    }
+
+                } } onSwipeLeft = { () => swipe(1) } onSwipeRight = { () => swipe(-1) } config={config} style={{height:'100%'}}>
                 {data.map( (item, i) => {
                         
                         return (

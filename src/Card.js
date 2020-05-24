@@ -146,16 +146,16 @@ const Card = (props) => {
             <Animated.View style={{width:'80%', alignSelf:'center', opacity: opacityAnim, transform: [{translateY: titleY }]}}>
                 {props.data.type === 'action' && 
                     <View style={{backgroundColor:'#424A93', borderRadius:50, width:50, height:50, alignSelf:'center', marginTop: 20, marginBottom: 10}}>
-                        <Text style={{color:'white', fontSize:45, textAlign:'center', lineHeight:48}}>+</Text>
+                        <Text selectable={false} style={{color:'white', fontSize:45, textAlign:'center', lineHeight:48}}>+</Text>
                     </View>
                 }
-                <Text style={{textAlign:'center', color:'#4E5B76', fontSize:25, fontWeight:'bold'}}>
+                <Text selectable={false} style={{textAlign:'center', color:'#4E5B76', fontSize:25, fontWeight:'bold'}}>
                     {props.data.title}
                 </Text>
             </Animated.View>
 
             <Animated.View style={{marginTop: 15, opacity: opacityAnim, transform: [{translateY: descriptionY }]}}>
-                <Text style={{color:'#A0A9B8', fontSize:14, textAlign:'center', width:'80%', alignSelf:'center', lineHeight:22}}>
+                <Text selectable={false} style={{color:'#A0A9B8', fontSize:14, textAlign:'center', width:'80%', alignSelf:'center', lineHeight:22}}>
                     {props.data.description}
                 </Text>
             </Animated.View>
@@ -163,7 +163,7 @@ const Card = (props) => {
             {props.data.type === 'product' &&
             <Animated.View style={{marginTop: 20, opacity: opacityAnim, transform: [{translateY: buttonY }]}}>
                 <View style={{backgroundColor:'#303371', width: 100, borderRadius:50, alignSelf:'center'}}>
-                    <Text style={{color:'white', fontSize:15, fontWeight:'bold', marginVertical: 12, marginHorizontal: 20, textAlign:'center' }}>
+                    <Text selectable={false} style={{color:'white', fontSize:15, fontWeight:'bold', marginVertical: 12, marginHorizontal: 20, textAlign:'center' }}>
                         View
                     </Text>
                 </View>
