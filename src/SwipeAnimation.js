@@ -17,7 +17,7 @@ const angle =  0.3;
 const elevation = Math.tan(angle) * width;
 
 /**
- * Area of the background image to be covered by front layer
+ * Area of the background image to be covered by the overlay
  */
 const cover_area = 3/5;
 
@@ -86,6 +86,7 @@ const SwipeAnimation = () => {
 
           <UserInfo />
 
+          {/* Background image */}
           <Animated.View style={{ ...StyleSheet.absoluteFill, flex: 1, marginLeft: bgX, marginTop: bgY }}> 
             
               <Image
@@ -97,7 +98,7 @@ const SwipeAnimation = () => {
             
           </Animated.View>      
 
-          
+          {/* Solid Overlay */}
           <Animated.View style={{ position:'absolute', bottom:0, left:0, height:growAnim}}>
             <Svg width={width} height={cover_area * height} >
               <Polygon

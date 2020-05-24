@@ -4,21 +4,26 @@ import Avatar from './Avatar';
 
 const { width, height } = Dimensions.get('window');
 
+/**
+ * User info's screen area
+ */
 const user_info_area = 2/5;
 
 const UserInfo = () => {
+
+    //Final Y position
+    const  yTo = 60;
+
+    //Initial Y position
+    const  yFrom = 150;
 
     const avatarOpacity = React.useRef(new Animated.Value(0)).current;
     const nameOpacity = React.useRef(new Animated.Value(0)).current;
     const cartOpacity = React.useRef(new Animated.Value(0)).current;
 
-    const avatarY = React.useRef(new Animated.Value(120)).current;
-    const nameY = React.useRef(new Animated.Value(120)).current;
-    const cartY = React.useRef(new Animated.Value(120)).current;
-
-    const avatarOffset = 30;
-
-    console.log('Avatar area: ', user_info_area * height);
+    const avatarY = React.useRef(new Animated.Value( yFrom )).current;
+    const nameY = React.useRef(new Animated.Value( yFrom )).current;
+    const cartY = React.useRef(new Animated.Value( yFrom )).current;
 
     const show = () => {
 
@@ -32,7 +37,7 @@ const UserInfo = () => {
                 delay: 1100
               }),
               Animated.timing(avatarY, {
-                toValue: avatarOffset,
+                toValue: yTo,
                 easing: Easing.inOut(Easing.exp),
                 duration: 900,
                 delay: 1100
@@ -46,7 +51,7 @@ const UserInfo = () => {
                 delay: 1150
               }),
               Animated.timing(nameY, {
-                toValue: avatarOffset,
+                toValue: yTo,
                 easing: Easing.inOut(Easing.exp),
                 duration: 850,
                 delay: 1150
@@ -61,7 +66,7 @@ const UserInfo = () => {
               }),
     
               Animated.timing(cartY, {
-                toValue: avatarOffset,
+                toValue: yTo,
                 easing: Easing.inOut(Easing.exp),
                 duration: 900,
                 delay: 1200
