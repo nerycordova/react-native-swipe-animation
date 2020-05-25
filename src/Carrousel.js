@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Dimensions, StyleSheet, Animated, Easing } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, Animated, Easing, TouchableWithoutFeedback } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 
 import Card from './Card';
@@ -44,11 +44,17 @@ const bottom_area = 1/18;
 
 const Carrousel = (props) => {
 
+    /**
+     * Gesture handler configuration
+     */
     const config = {
         velocityThreshold: 0.1,
         directionalOffsetThreshold: 500,
     };
 
+    /**
+     * Card's data
+     */
     const { data } = props;
 
     /**
@@ -60,15 +66,24 @@ const Carrousel = (props) => {
      * Card's Y position
      */
     const positionY = data.map( item => React.useRef(new Animated.Value(vertical_gap)).current );
+
     /**
      * Viewing index
      */
     const [index, setIndex] = React.useState(0);
 
     /**
-     * Used to control card animation delay
+     * Used to control card animation  based on the direction that the carrousel is moving.
+     * Swipe left / jump to the right thru pagination: direction is positve (increase index)
+     * Swipe right / jump to the left thru pagination: direction is negative (decrease index)
      */
     const [direction, setDirection] = React.useState(1);
+    
+    /**
+     * Used to control pagination Y animation and opacity
+     */
+    const paginationY = React.useRef( new Animated.Value(30) ).current;
+    const paginationOpacity = React.useRef( new Animated.Value(0) ).current;
 
 
     const useDidMountEffect = (func, deps) => {
@@ -80,7 +95,7 @@ const Carrousel = (props) => {
         }, deps);
     }
 
-    // Mount animation
+    // On Mount animation
     const animate = () => {
 
         const animations = data.map ( (item, index) => 
@@ -92,14 +107,33 @@ const Carrousel = (props) => {
                                 })
                             );
 
+        //Move up card at index = 0
         animations.push(
-             //Move up card at 0
              Animated.timing(positionY[0], {
                 toValue: 0,
                 easing: Easing.inOut(Easing.exp),
                 duration: 1000,
                 delay: 1200 
             })
+        )
+
+        //Move up pagination controls
+        animations.push(
+            Animated.timing(paginationY, {
+               toValue: 0,
+               easing: Easing.inOut(Easing.exp),
+               duration: 1000,
+               delay: 1200 
+           })
+        )
+
+        animations.push(
+            Animated.timing(paginationOpacity, {
+               toValue: 1,
+               easing: Easing.inOut(Easing.exp),
+               duration: 1000,
+               delay: 1200 
+           })
         )
 
         Animated.parallel(animations).start();
@@ -118,6 +152,15 @@ const Carrousel = (props) => {
         
         setIndex( (index) => index + direction );
         
+    }
+
+    const goToCard = (targetIndex) => {
+
+        // let direction = 1;
+        // if (targetIndex < index) direction = -1;
+        setDirection( targetIndex - index );
+        setIndex( targetIndex );
+
     }
 
     React.useEffect ( () => {
@@ -164,16 +207,16 @@ const Carrousel = (props) => {
     return (
         
             <View style={ styles.carrousel }>
+
                 <GestureRecognizer onSwipe={ (direction, state) => {
 
-                    //Sometimes the gesture handler does not seem to pickup certain events. The below
+                    //Sometimes the gesture handler does not seem to properly pickup the swipe direction. The below
                     //is an attempt to correct that.
                     const {dx} = state;
                     if (direction === null){
                         if (dx > 0) {
                             swipe(-1) //swipe right
-                        }
-                        else if (dx < 0) {
+                        }else if (dx < 0) {
                             swipe(1) //swipe left
                         }
                     }
@@ -198,6 +241,29 @@ const Carrousel = (props) => {
                     })
                 }
                 </GestureRecognizer>
+
+                {/* Pagination */}
+                <Animated.View style={
+                    [
+                        styles.pagination,
+                        {
+                            transform: [ {translateY : paginationY} ],
+                            opacity: paginationOpacity
+                        }
+                    ]
+                    }>
+                    {data.map ( (item, i) => {
+                        return(
+                            <TouchableWithoutFeedback onPress={() => { goToCard(i) }} key={item.id}>
+                                <View style={{width:10, height:10, 
+                                    backgroundColor: i === index ? '#424A93' : '#A0A9B8', 
+                                    borderRadius:10, marginHorizontal:12}} >
+                                </View>
+                            </TouchableWithoutFeedback>
+                        )
+                    })}
+                </Animated.View>
+
             </View>
         
     )
@@ -214,6 +280,12 @@ const styles = StyleSheet.create({
         justifyContent:'flex-start',
         alignSelf: 'center',
         overflow: 'hidden'
+    },
+    pagination:{
+        position: 'absolute', 
+        alignSelf:'center', 
+        bottom:40, 
+        flexDirection:'row'
     }
 });
 

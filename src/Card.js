@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Dimensions, StyleSheet, Image, Animated, Easing } from 'react-native';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
 const { width, height } = Dimensions.get('window');
 
 const card_width_area = 3/5;
@@ -145,9 +145,7 @@ const Card = (props) => {
             
             <Animated.View style={{width:'80%', alignSelf:'center', opacity: opacityAnim, transform: [{translateY: titleY }]}}>
                 {props.data.type === 'action' && 
-                    <View style={{backgroundColor:'#424A93', borderRadius:50, width:50, height:50, alignSelf:'center', marginTop: 20, marginBottom: 10}}>
-                        <Text selectable={false} style={{color:'white', fontSize:45, textAlign:'center', lineHeight:48}}>+</Text>
-                    </View>
+                    <Icon name="add-circle" size={60} style={{alignSelf:'center', color:'#424A93', marginTop:20, marginBottom: 10}}/>
                 }
                 <Text selectable={false} style={{textAlign:'center', color:'#4E5B76', fontSize:25, fontWeight:'bold'}}>
                     {props.data.title}

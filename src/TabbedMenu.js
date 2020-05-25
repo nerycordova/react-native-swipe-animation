@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconC from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const menu_height = 75;
+const menu_height = 70;
 
 const TabbedMenu = (props) => {
 
@@ -43,16 +43,16 @@ const TabbedMenu = (props) => {
     return (
         <Animated.View style={[styles.menu, {transform: [{translateY: yAnim}]}] }>
             <View style={styles.menuItem}>
-                <IconC name="diamond-stone" size={30} style ={{alignSelf:'center'}} />    
-                <Text style={{textAlign:'center'}}>Wearables</Text>
+                <IconC name="diamond-stone" size={25} style ={{alignSelf:'center'}} />    
+                <Text style={{textAlign:'center', marginTop:5}}>Wearables</Text>
             </View>
             <View style={styles.menuItem}>
-                <Icon name="face" size={30} style={{alignSelf:'center'}}/>
-                <Text style={{textAlign: 'center'}}>Profile</Text>
+                <Icon name="face" size={25} style={{alignSelf:'center'}}/>
+                <Text style={{textAlign: 'center', marginTop:5}}>Profile</Text>
             </View>
             <View style={styles.menuItem}>
-                <Icon name="help-outline" size={30} style={{alignSelf:'center'}}/>
-                <Text style={{textAlign: 'center'}}>Help</Text>
+                <Icon name="help-outline" size={25} style={{alignSelf:'center'}}/>
+                <Text style={{textAlign: 'center', marginTop:5}}>Help</Text>
             </View>
         </Animated.View>
     )
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     },
     menuItem:{
         width: '33%',
-        alignSelf: 'center'
+        alignSelf: 'center',
     }
 })
 
