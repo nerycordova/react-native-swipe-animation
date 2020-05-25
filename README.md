@@ -1,10 +1,10 @@
 # React Native Swipe Animation
 
-Proof of concept of a beautiful swipe animation made in react native. 
+Proof of concept of a beautiful swipe animation, made in react native. 
 
 ![Gif demo](./docs/react-native-swipe-animation.gif)
 
-[Here it is](https://snack.expo.io/@nerychucuy/github.com-nerychucuy-react-native-swipe-animation) the Snack link to this app, where you can play with the web, androind and iOS version . In that link you will also find instructions to run the App on your device (through the Expo app).
+[Here is](https://snack.expo.io/@nerychucuy/github.com-nerychucuy-react-native-swipe-animation) the Snack link to this app, where you can play with the web, androind and iOS version . In that link you will also find instructions to run the App on your device (through the Expo app).
 
 ## Running this project in your local environment
 
