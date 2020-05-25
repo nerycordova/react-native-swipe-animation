@@ -255,9 +255,11 @@ const Carrousel = (props) => {
                     {data.map ( (item, i) => {
                         return(
                             <TouchableWithoutFeedback onPress={() => { goToCard(i) }} key={item.id}>
-                                <View style={{width:10, height:10, 
-                                    backgroundColor: i === index ? '#424A93' : '#A0A9B8', 
-                                    borderRadius:10, marginHorizontal:12}} >
+                                <View style={{width: 40, height:40}}>
+                                    <View style={{width:10, height:10, 
+                                        backgroundColor: i === index ? '#424A93' : '#A0A9B8', 
+                                        borderRadius:10}} >
+                                    </View>
                                 </View>
                             </TouchableWithoutFeedback>
                         )
@@ -284,7 +286,7 @@ const styles = StyleSheet.create({
     pagination:{
         position: 'absolute', 
         alignSelf:'center', 
-        bottom:40, 
+        bottom:10, 
         flexDirection:'row'
     }
 });
