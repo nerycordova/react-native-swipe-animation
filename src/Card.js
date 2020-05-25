@@ -15,7 +15,7 @@ const Card = (props) => {
     /**
      * Product image scaling animation
      */
-    const imageScale = React.useRef(new Animated.Value(0)).current;
+    const imageScale = React.useRef(new Animated.Value(0.01)).current; // 0.01 instead of 0, to prevent image flickering on Android
 
     /**
      * Card content opacity animation
@@ -82,7 +82,7 @@ const Card = (props) => {
             [
                 //Image scale animation
               Animated.timing(imageScale, {
-                toValue: 0,
+                toValue: 0.01, // 0.01 instead of 0, to prevent image flickering on Android
                 easing: Easing.inOut(Easing.exp),
                 duration: 1000
               }),
@@ -131,7 +131,7 @@ const Card = (props) => {
 
     React.useEffect( () => {
         if (props.showContent) {
-            contentFadeIn(1500);
+            contentFadeIn(500);
         }
     } , [])
 

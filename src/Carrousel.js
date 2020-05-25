@@ -42,7 +42,14 @@ const vertical_gap = 20;
  */
 const bottom_area = 1/18;
 
+/**
+ * Initial pagination Y
+ */
+const pagination_y = 30;
+
 const Carrousel = (props) => {
+
+    const [display, setDisplay] = React.useState(false);
 
     /**
      * Gesture handler configuration
@@ -82,7 +89,7 @@ const Carrousel = (props) => {
     /**
      * Used to control pagination Y animation and opacity
      */
-    const paginationY = React.useRef( new Animated.Value(30) ).current;
+    const paginationY = React.useRef( new Animated.Value(pagination_y) ).current;
     const paginationOpacity = React.useRef( new Animated.Value(0) ).current;
 
 
@@ -95,15 +102,15 @@ const Carrousel = (props) => {
         }, deps);
     }
 
-    // On Mount animation
-    const animate = () => {
+    // Fade-in animation
+    const show = () => {
 
         const animations = data.map ( (item, index) => 
                                 Animated.timing(scrollX[index], {
                                     toValue: initial_position,
                                     easing: Easing.inOut(Easing.exp),
                                     duration: 1000,
-                                    delay: 1200 + ( index === 1 ? 100 : 0 )
+                                    delay:  ( index === 1 ? 100 : 0 )
                                 })
                             );
 
@@ -113,7 +120,7 @@ const Carrousel = (props) => {
                 toValue: 0,
                 easing: Easing.inOut(Easing.exp),
                 duration: 1000,
-                delay: 1200 
+                delay: 200 
             })
         )
 
@@ -123,7 +130,7 @@ const Carrousel = (props) => {
                toValue: 0,
                easing: Easing.inOut(Easing.exp),
                duration: 1000,
-               delay: 1200 
+               delay: 200 
            })
         )
 
@@ -132,23 +139,73 @@ const Carrousel = (props) => {
                toValue: 1,
                easing: Easing.inOut(Easing.exp),
                duration: 1000,
-               delay: 1200 
+               delay: 200 
            })
         )
 
-        Animated.parallel(animations).start();
+        return Animated.parallel(animations);
   
-      };
+    };
+
+    /**
+     * Fade-out animation
+     */
+    const hide = () => {
+        const animations = data.map ( (item, index) => 
+                                Animated.timing(scrollX[index], {
+                                    toValue: 0,
+                                    easing: Easing.inOut(Easing.exp),
+                                    duration: 1000,
+                                    
+                                })
+                            );
+
+        //Move up card at index = 0
+        animations.push(
+             Animated.timing(positionY[0], {
+                toValue: vertical_gap,
+                easing: Easing.inOut(Easing.exp),
+                duration: 1000,
+                
+            })
+        )
+
+        //Move up pagination controls
+        animations.push(
+            Animated.timing(paginationY, {
+               toValue: pagination_y,
+               easing: Easing.inOut(Easing.exp),
+               duration: 1000,
+               
+           })
+        )
+
+        animations.push(
+            Animated.timing(paginationOpacity, {
+               toValue: 0,
+               easing: Easing.inOut(Easing.exp),
+               duration: 1000,
+               
+           })
+        )
+
+        return Animated.parallel(animations);
+    }
 
     const swipe = (direction) => {
         
         setDirection ( direction );
 
-        //Swipe left validation
+        //Swipe left: validate that index ramins within boundaries
         if ( direction === 1 && index >= data.length - 1) return;
-        
-        //Swipe right validation
-        if ( direction === -1 && index === 0) return;
+    
+        //Swipe right: validate that index remains within boundaries
+        if ( direction === -1 && index === 0) {
+            if (typeof props.onScrollOutBoundLeft !== 'undefined'){
+                props.onScrollOutBoundLeft();
+            }
+            return;
+        };
         
         setIndex( (index) => index + direction );
         
@@ -165,9 +222,23 @@ const Carrousel = (props) => {
 
     React.useEffect ( () => {
 
-        animate();
+        if (props.show){
+            setDisplay(true);
+            show().start();
+        }
 
     } , [])
+
+    React.useEffect( ()=> {
+        if (props.show){
+          setDisplay(true);
+          show().start();
+        }else{
+            hide().start(() => { //callback, when fadeOut is complete, render null
+                setDisplay(false); 
+            });
+        }
+      } , [props.show])
 
 
     useDidMountEffect(() => {
@@ -203,6 +274,8 @@ const Carrousel = (props) => {
         Animated.parallel(animations).start();
 
     }, [index]); 
+
+    if (!display) return null;
 
     return (
         
@@ -255,10 +328,10 @@ const Carrousel = (props) => {
                     {data.map ( (item, i) => {
                         return(
                             <TouchableWithoutFeedback onPress={() => { goToCard(i) }} key={item.id}>
-                                <View style={{width: 40, height:40}}>
+                                <View style={{width: 40, height:40, display:'flex', justifyContent:'center'}}>
                                     <View style={{width:10, height:10, 
                                         backgroundColor: i === index ? '#424A93' : '#A0A9B8', 
-                                        borderRadius:10}} >
+                                        borderRadius:10, alignSelf:'center'}} >
                                     </View>
                                 </View>
                             </TouchableWithoutFeedback>
@@ -286,7 +359,7 @@ const styles = StyleSheet.create({
     pagination:{
         position: 'absolute', 
         alignSelf:'center', 
-        bottom:10, 
+        bottom:20, 
         flexDirection:'row'
     }
 });

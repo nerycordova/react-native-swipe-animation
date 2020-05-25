@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, Animated, Easing, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, Animated, Easing, Text, Dimensions, ImagePropTypes } from 'react-native';
 import Avatar from './Avatar';
+import { hide } from 'expo/build/launch/SplashScreen';
 
 const { width, height } = Dimensions.get('window');
 
@@ -9,7 +10,9 @@ const { width, height } = Dimensions.get('window');
  */
 const user_info_area = 2/5;
 
-const UserInfo = () => {
+const UserInfo = (props) => {
+
+    const [display, setDisplay] = React.useState(false);
 
     //Final Y position
     const  yTo = 60;
@@ -25,63 +28,88 @@ const UserInfo = () => {
     const nameY = React.useRef(new Animated.Value( yFrom )).current;
     const cartY = React.useRef(new Animated.Value( yFrom )).current;
 
+    const animate = ( {opacityTarget, yTarget, action} ) => Animated.parallel(
+        [
+          //Avatar
+          Animated.timing(avatarOpacity, {
+            toValue: opacityTarget,
+            easing: Easing.inOut(Easing.exp),
+            duration: 900,
+            delay: action === 'showing' ? 100 : 200 //used to invert animation sequence
+          }),
+          Animated.timing(avatarY, {
+            toValue: yTarget,
+            easing: Easing.inOut(Easing.exp),
+            duration: 900,
+            delay: action === 'showing' ? 100 : 200 //used to invert animation sequence
+          }),
+
+          //Name
+          Animated.timing(nameOpacity, {
+            toValue: opacityTarget,
+            easing: Easing.inOut(Easing.exp),
+            duration: 850,
+            delay: 150
+          }),
+          Animated.timing(nameY, {
+            toValue: yTarget,
+            easing: Easing.inOut(Easing.exp),
+            duration: 850,
+            delay: 150
+          }),
+
+          //Cart info
+          Animated.timing(cartOpacity, {
+            toValue: opacityTarget,
+            easing: Easing.inOut(Easing.exp),
+            duration: 900,
+            delay: action === 'showing' ? 200 : 100 //used to invert animation sequence
+          }),
+
+          Animated.timing(cartY, {
+            toValue: yTarget,
+            easing: Easing.inOut(Easing.exp),
+            duration: 900,
+            delay: action === 'showing' ? 200 : 100 //used to invert animation sequence
+          })
+          
+        ]
+      )
+    
     const show = () => {
+      animate({opacityTarget : 1, yTarget: yTo, action:'showing'}).start();
+    }
 
-        Animated.parallel(
-            [
-              //Avatar
-              Animated.timing(avatarOpacity, {
-                toValue: 1,
-                easing: Easing.inOut(Easing.exp),
-                duration: 900,
-                delay: 1100
-              }),
-              Animated.timing(avatarY, {
-                toValue: yTo,
-                easing: Easing.inOut(Easing.exp),
-                duration: 900,
-                delay: 1100
-              }),
-    
-              //Name
-              Animated.timing(nameOpacity, {
-                toValue: 1,
-                easing: Easing.inOut(Easing.exp),
-                duration: 850,
-                delay: 1150
-              }),
-              Animated.timing(nameY, {
-                toValue: yTo,
-                easing: Easing.inOut(Easing.exp),
-                duration: 850,
-                delay: 1150
-              }),
-    
-              //Cart info
-              Animated.timing(cartOpacity, {
-                toValue: 1,
-                easing: Easing.inOut(Easing.exp),
-                duration: 900,
-                delay: 1200
-              }),
-    
-              Animated.timing(cartY, {
-                toValue: yTo,
-                easing: Easing.inOut(Easing.exp),
-                duration: 900,
-                delay: 1200
-              })
-              
-            ]
-          ).start();
-
+    const hide = () =>{
+      animate(
+        {opacityTarget : 0, 
+          yTarget: yFrom, 
+          action:'hiding'
+        }).start( () => { //callback, when fadeOut is complete, render null
+          setDisplay(false); 
+      } );
     }
 
     React.useEffect( () => {
 
+      if (props.show){
+        setDisplay(true);
         show();
+      }
 
-    } , [])
+    } , []);
+
+    React.useEffect( ()=> {
+      if (props.show){
+        setDisplay(true);
+        show();
+      }else{
+        hide();
+      }
+    } , [props.show])
+
+
+    if (!display) return null;
 
     return (
         <View style={ styles.avatar }>

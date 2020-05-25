@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Image, StyleSheet, Dimensions, Animated, Easing } from 'react-native';
-import Svg, { Polygon } from 'react-native-svg';
+import { View, Image, StyleSheet, Dimensions, Animated, Easing, TouchableWithoutFeedback, Text, Button } from 'react-native';
+
+import Overlay from './Overlay';
 import UserInfo from './UserInfo';
 import Carrousel from './Carrousel';
 import TabbedMenu from './TabbedMenu';
@@ -10,20 +11,6 @@ const shapphire = require('../assets/sapphire.png');
 
 const { width, height } = Dimensions.get('window');
 
-/**
- * Angle (in radians) of the overlay's triangle clip
- */
-const angle =  0.3;
-
-/**
- * Calculate height of the triangle clip
- */
-const elevation = Math.tan(angle) * width;
-
-/**
- * Area of the background image to be covered by the overlay
- */
-const cover_area = 3/5;
 
 /**
  * Background Y translation
@@ -64,11 +51,66 @@ const data = [
 
 const SwipeAnimation = () => {
 
-    const growAnim = React.useRef(new Animated.Value(0)).current;
+    const [playing, setPlaying] = React.useState(false);
+
+    /**
+     * To animate Play button
+     */
+    const buttonY = React.useRef(new Animated.Value(50)).current;
+    const buttonOpacity = React.useRef(new Animated.Value(0)).current;
+
+    /**
+     * To animate background
+     */
     const bgY = React.useRef(new Animated.Value(0)).current;
     const bgX = React.useRef(new Animated.Value(0)).current;
 
-    const show = () => {
+
+    const buttonFadeIn = () => {
+      Animated.parallel(
+        [
+          Animated.timing(buttonY, {
+            toValue: 0,
+            easing: Easing.inOut(Easing.exp),
+            duration: 1000,
+          }),
+          Animated.timing(buttonOpacity, {
+            toValue: 1,
+            easing: Easing.inOut(Easing.exp),
+            duration: 1000,
+          }),
+          Animated.timing(bgY, {
+            toValue: 0,
+            easing: Easing.inOut(Easing.exp),
+            duration: 1000,
+          }),
+          Animated.timing(bgX, {
+            toValue: 0,
+            easing: Easing.inOut(Easing.exp),
+            duration: 1000,
+          })
+        ]
+      ).start();
+    }
+
+    const buttonFadeOut = () => {
+      Animated.parallel(
+        [
+          Animated.timing(buttonY, {
+            toValue: 50,
+            easing: Easing.inOut(Easing.exp),
+            duration: 1000,
+          }),
+          Animated.timing(buttonOpacity, {
+            toValue: 0,
+            easing: Easing.inOut(Easing.exp),
+            duration: 1000,
+          })
+        ]
+      ).start();
+    }
+
+    const doPlay = () => {
       
       Animated.parallel(
         [
@@ -76,46 +118,33 @@ const SwipeAnimation = () => {
             toValue: bgYTarget,
             easing: Easing.inOut(Easing.exp),
             duration: 1000,
-            delay: 1000
           }),
 
           Animated.timing(bgX, {
             toValue: bgXTarget,
             easing: Easing.inOut(Easing.exp),
             duration: 1000,
-            delay: 1000
-          }),
-
-          Animated.timing(growAnim, {
-            toValue: cover_area*height,
-            easing: Easing.inOut(Easing.exp),
-            duration: 900,
-            delay: 1100
-          }),
+          })
           
         ]
       ).start();
 
     };
-  
 
-    React.useEffect( () => {
-
-      show();
-
-    } , []);
-
+    React.useEffect( () =>{
+      buttonFadeIn();
+    } , [])
 
     return (
         <View
           style={{
             flex: 1,
             backgroundColor: '#FCFCFC',
-            justifyContent: 'flex-end',
+            justifyContent: 'center',
           }}
         >
 
-          <UserInfo />
+          <UserInfo show={playing}/> 
 
           {/* Background image */}
           <Animated.View style={{ ...StyleSheet.absoluteFill, flex: 1, marginLeft: bgX, marginTop: bgY }}> 
@@ -130,22 +159,44 @@ const SwipeAnimation = () => {
           </Animated.View>      
 
           {/* Solid Overlay */}
-          <Animated.View style={{ position:'absolute', bottom:0, left:0, height:growAnim}}>
-            <Svg width={width} height={cover_area * height} >
-              <Polygon
-                    points={`0,${elevation} ${width},0 ${width},${height} 0,${height}`}
-                    fill="#FCFCFC"
-                />
-            </Svg>
+          <Overlay show={playing} />
+          
+          <Carrousel show={playing} data={data} onScrollOutBoundLeft={ () => { setPlaying(false); buttonFadeIn(); } }/>
+
+          <TabbedMenu show={playing}/> 
+          
+          {/* Play button */}
+          <Animated.View style={
+            [
+              styles.playButton,
+              {
+                opacity: buttonOpacity,
+                transform : [{translateY:buttonY}]
+              }
+            ]  
+            }>
+            <TouchableWithoutFeedback onPress={ () => { setPlaying(true); buttonFadeOut(); doPlay(); } }>
+              <View style={{width:'100%'}}>
+                <Text style={{color:'white', fontSize:20, textAlign:'center', marginHorizontal: 25,  marginVertical: 10}}>Play</Text>
+              </View>
+            </TouchableWithoutFeedback> 
           </Animated.View>
           
-          <Carrousel data={data}/>
-
-          {/* Tabbed Menu */}
-          <TabbedMenu visible={true}/>
 
         </View>
       );
 }
+
+const styles = StyleSheet.create({
+  playButton:{
+    backgroundColor: '#303371',  
+    alignSelf:'center', 
+    width:150, 
+    height: 50,
+    borderRadius: 25, 
+    position:'absolute', 
+    justifyContent:'center'
+  }
+})
 
 export default SwipeAnimation;

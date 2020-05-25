@@ -7,38 +7,50 @@ const menu_height = 70;
 
 const TabbedMenu = (props) => {
 
+    const [display, setDisplay] = React.useState(false);
+
+    /**
+     * Used to animate Y transform
+     */
     const yAnim = React.useRef(new Animated.Value(menu_height)).current;
 
-    const fadeIn = () => {
-
-        Animated.timing(yAnim, {
+    const show = () => Animated.timing(yAnim, {
             toValue: 0,
             easing: Easing.inOut(Easing.exp),
             duration: 1000,
-            delay: 1500
-        }).start();
+            delay: 500
+        })
 
-    }
-
-    const fadeOut = () => {
-
-        Animated.timing(yAnim, {
+    const hide = () =>  Animated.timing(yAnim, {
             toValue: menu_height,
             easing: Easing.inOut(Easing.exp),
             duration: 1000
-        }).start();
+        })
 
-    }
 
     React.useEffect( () => {
 
-        if (props.visible){
-            fadeIn();
-        }else{
-            fadeOut();
+        if (props.show){
+            setDisplay(true);
+            show().start();
         }
 
-    } , [props.visible])
+    }, []);
+
+    React.useEffect( () => {
+
+        if (props.show){
+            setDisplay(true);
+            show().start();
+        }else{
+            hide().start(() => { //callback, when fadeOut is complete, render null
+                setDisplay(false); 
+            });
+        }
+
+    }, [props.show]);
+
+    if (!display) return null;
 
     return (
         <Animated.View style={[styles.menu, {transform: [{translateY: yAnim}]}] }>
